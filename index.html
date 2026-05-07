@@ -3,234 +3,492 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EddyKLK Barrio Games | 2026</title>
+    <title>EddyKLK Barrio Games - Apps del Barrio: EL CATÁLOGO</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
+            /* Variables Modo Oscuro (Por defecto) */
             --bg-dark: #0a1128;
+            --bg-particle-center: rgba(10, 17, 40, 0.5);
+            --bg-particle-edge: rgba(5, 8, 20, 1);
             --card-bg: rgba(10, 17, 40, 0.8);
             --text-main: #e0e0e0;
+            --text-muted: rgba(255, 255, 255, 0.5);
+            --header-bg: rgba(10, 17, 40, 0.95);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --submenu-bg: #0d1a33;
+            
+            /* Colores Neón (se mantienen en ambos modos para el estilo) */
             --neon-blue: #00ffff;
             --neon-magenta: #ff00ff;
             --neon-lime: #00ff00;
-            --header-bg: rgba(10, 17, 40, 0.95);
-            --border-color: rgba(255, 255, 255, 0.1);
+            --neon-amber: #ffbf00;
+            --neon-red: #ff0000;
+            
+            --font-main: 'Poppins', sans-serif;
+            --font-display: 'Orbitron', sans-serif;
+            --header-height: 80px;
         }
 
         /* Variables Modo Claro */
         body.light-mode {
-            --bg-dark: #f0f2f5;
+            --bg-dark: #f4f6f9;
+            --bg-particle-center: rgba(244, 246, 249, 0.8);
+            --bg-particle-edge: rgba(220, 225, 235, 1);
             --card-bg: #ffffff;
-            --text-main: #1a1a1a;
-            --neon-blue: #007bff;
-            --neon-magenta: #d63384;
-            --neon-lime: #28a745;
+            --text-main: #1a1a2e;
+            --text-muted: rgba(0, 0, 0, 0.6);
             --header-bg: rgba(255, 255, 255, 0.95);
             --border-color: rgba(0, 0, 0, 0.1);
+            --submenu-bg: #ffffff;
+            
+            /* Ajuste de neones para que se vean en fondo blanco */
+            --neon-blue: #0088ff;
+            --neon-magenta: #d100d1;
+            --neon-lime: #00a800;
         }
 
         body {
             margin: 0;
-            font-family: 'Poppins', sans-serif;
+            padding: 0;
+            font-family: var(--font-main);
             background-color: var(--bg-dark);
             color: var(--text-main);
-            transition: background 0.3s, color 0.3s;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
             scroll-behavior: smooth;
         }
 
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        /* Fondo dinámico de partículas */
+        #particle-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: 
+                radial-gradient(ellipse at center, var(--bg-particle-center) 0%, var(--bg-particle-edge) 100%),
+                repeating-linear-gradient(rgba(0, 255, 255, 0.03) 0px, rgba(0, 255, 255, 0.03) 2px, transparent 2px, transparent 100px),
+                repeating-linear-gradient(90deg, rgba(255, 0, 255, 0.03) 0px, rgba(255, 0, 255, 0.03) 2px, transparent 2px, transparent 100px);
+            background-size: cover, 100px 100px, 100px 100px;
+            z-index: -1;
+            transition: background 0.3s ease;
+        }
 
-        /* Header y Navegación */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        /* Header */
         header {
-            height: 80px;
+            height: var(--header-height);
             display: flex;
             align-items: center;
             justify-content: space-between;
             background-color: var(--header-bg);
-            border-bottom: 2px solid var(--neon-blue);
+            border-bottom: 2px solid rgba(0, 255, 255, 0.3);
             position: sticky;
             top: 0;
             z-index: 1000;
+            transition: background-color 0.3s ease;
         }
 
-        .logo { font-family: 'Orbitron'; color: var(--neon-blue); font-size: 1.2rem; }
+        .logo {
+            display: flex;
+            align-items: center;
+            font-family: var(--font-display);
+            font-size: 20px;
+            text-transform: uppercase;
+            color: var(--neon-blue);
+            text-shadow: 0 0 10px var(--neon-blue);
+        }
+        .logo i { font-size: 28px; margin-right: 12px; }
 
-        nav ul { list-style: none; display: flex; gap: 20px; padding: 0; }
-        nav ul li { position: relative; padding: 10px 0; } /* Padding para evitar huecos en hover */
+        nav ul {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
 
-        nav a { text-decoration: none; color: var(--text-main); font-weight: 600; transition: 0.3s; }
-        nav a:hover { color: var(--neon-magenta); }
+        /* Solución para que el submenú no se desaparezca (usando padding invisible) */
+        nav ul li {
+            margin: 0 15px;
+            position: relative;
+            padding: 30px 0; /* Esto crea un puente para el mouse */
+        }
 
-        /* Submenús mejorados */
+        nav ul li > a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 600;
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+
+        nav ul li > a:hover { color: var(--neon-magenta); }
+
+        .tutoriales-link { color: var(--neon-lime) !important; text-shadow: 0 0 5px var(--neon-lime); }
+        .entretenimientos-link { color: var(--neon-amber) !important; text-shadow: 0 0 5px var(--neon-amber); }
+
+        /* Estilo de Submenús (Puro CSS) */
         .submenu {
             display: none;
             position: absolute;
-            top: 100%; /* Pegado al li */
-            left: 0;
-            background: var(--header-bg);
+            top: 100%; /* Empieza justo donde termina el padding del li */
+            left: -10px;
+            background-color: var(--submenu-bg);
             border: 1px solid var(--neon-blue);
-            min-width: 180px;
             border-radius: 8px;
+            min-width: 200px;
             padding: 10px 0;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            z-index: 1001;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
-        nav ul li:hover .submenu { display: block; }
-
-        .submenu a { display: block; padding: 10px 20px; font-size: 14px; }
-        .submenu a:hover { background: var(--border-color); }
-
-        /* Botón Modo */
-        #mode-toggle {
-            background: none; border: 1px solid var(--neon-blue);
-            color: var(--neon-blue); padding: 8px 12px;
-            border-radius: 20px; cursor: pointer; transition: 0.3s;
-        }
-        #mode-toggle:hover { background: var(--neon-blue); color: #000; }
-
-        /* Hero */
-        .hero { text-align: center; padding: 60px 0; }
-        .hero h1 { font-family: 'Orbitron'; font-size: 3rem; color: var(--neon-blue); margin-bottom: 10px; }
-
-        /* Grid de Apps */
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-bottom: 50px; }
-        
-        .card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            padding: 25px;
-            border-radius: 15px;
-            transition: 0.3s;
-            cursor: pointer;
-            text-decoration: none;
-            color: inherit;
+        nav ul li:hover .submenu {
             display: block;
         }
-        .card:hover { transform: translateY(-10px); border-color: var(--neon-magenta); box-shadow: 0 0 15px var(--neon-magenta); }
-        .card h3 { font-family: 'Orbitron'; font-size: 1.2rem; margin: 10px 0; color: var(--neon-blue); }
 
-        /* Sección Contacto */
-        #contacto { background: var(--card-bg); padding: 50px; border-radius: 20px; margin-top: 50px; border: 1px solid var(--neon-blue); }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; }
+        .submenu-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            text-decoration: none;
+            color: var(--text-main);
+            font-size: 14px;
+            transition: background 0.3s ease;
+        }
+        .submenu-item i { margin-right: 15px; font-size: 16px; width: 20px; text-align: center; }
+        .submenu-item:hover { background-color: var(--border-color); color: var(--neon-magenta); }
+
+        /* Controles de Header */
+        .header-controls { display: flex; align-items: center; }
+        #theme-toggle {
+            background: none; border: 1px solid var(--neon-amber);
+            color: var(--neon-amber); padding: 8px 15px;
+            border-radius: 20px; cursor: pointer; transition: 0.3s; font-size: 16px;
+        }
+        #theme-toggle:hover { background: var(--neon-amber); color: #000; box-shadow: 0 0 10px var(--neon-amber); }
+
+        /* Hero */
+        .hero { padding: 80px 0; text-align: center; }
+        .hero h1 {
+            font-family: var(--font-display); font-size: 60px; margin: 0 0 15px; text-transform: uppercase;
+            background: linear-gradient(to right, var(--neon-blue), var(--neon-magenta), var(--neon-blue));
+            -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+        }
+        .hero p { font-size: 20px; color: var(--text-muted); margin: 0; }
+
+        /* Grilla de Catálogo */
+        .catalogo {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; margin-bottom: 80px;
+        }
+
+        .catalogo-card {
+            background-color: var(--card-bg); border-radius: 15px; padding: 30px;
+            display: flex; flex-direction: column; justify-content: space-between;
+            border: 1px solid var(--border-color); text-decoration: none; color: inherit;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            position: relative; overflow: hidden;
+        }
+        .catalogo-card:hover { transform: translateY(-5px); }
+
+        /* Colores de Borde Neón para Tarjetas (Hover) */
+        .card-domino:hover { border-color: var(--neon-magenta); box-shadow: 0 0 20px var(--neon-magenta); }
+        .card-bovedad:hover { border-color: var(--neon-blue); box-shadow: 0 0 20px var(--neon-blue); }
+        .card-micontador:hover { border-color: var(--neon-amber); box-shadow: 0 0 20px var(--neon-amber); }
+        .card-leyendas:hover { border-color: var(--neon-red); box-shadow: 0 0 20px var(--neon-red); }
+        .card-transito:hover { border-color: var(--neon-lime); box-shadow: 0 0 20px var(--neon-lime); }
+        .card-colmado:hover { border-color: var(--neon-magenta); box-shadow: 0 0 20px var(--neon-magenta); }
+        .card-futbol:hover { border-color: var(--neon-blue); box-shadow: 0 0 20px var(--neon-blue); }
+        .card-palabra:hover { border-color: var(--neon-lime); box-shadow: 0 0 20px var(--neon-lime); }
+
+        .card-top { display: flex; align-items: flex-start; margin-bottom: 25px; }
+        .card-icon { font-size: 32px; margin-right: 15px; width: 40px; text-align: center; }
+        
+        /* Colores fijos de iconos */
+        .card-domino .card-icon { color: var(--neon-magenta); }
+        .card-bovedad .card-icon { color: var(--neon-blue); }
+        .card-micontador .card-icon { color: var(--neon-amber); }
+        .card-leyendas .card-icon { color: var(--neon-red); }
+
+        .card-title h3 { margin: 0; font-family: var(--font-display); font-size: 18px; text-transform: uppercase; color: var(--text-main); }
+        .card-title p { margin: 0; font-size: 12px; color: var(--text-muted); }
+        .card-desc { font-size: 14px; color: var(--text-main); opacity: 0.8; margin-bottom: 20px; line-height: 1.6; }
+        .card-bottom { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
+        .descubre-text { font-size: 12px; color: var(--text-muted); }
+        
+        .ver-detalle {
+            font-size: 14px; font-weight: 700; color: var(--neon-blue);
+            transition: color 0.3s ease, text-shadow 0.3s ease;
+        }
+        .catalogo-card:hover .ver-detalle { text-shadow: 0 0 10px var(--neon-blue); animation: text-wave 0.5s ease-in-out; }
+
+        @keyframes text-wave {
+            0% { transform: translateY(0); }
+            25% { transform: translateY(-3px); }
+            50% { transform: translateY(0); }
+            75% { transform: translateY(-1.5px); }
+            100% { transform: translateY(0); }
+        }
+
+        /* Sección Contacto estilo Neón */
+        #contacto-section {
+            background-color: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 15px; padding: 50px; margin-bottom: 80px; position: relative;
+        }
+        #contacto-section h2 { font-family: var(--font-display); color: var(--neon-magenta); text-align: center; margin-top: 0; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; color: var(--text-main); font-weight: 600; }
         .form-group input, .form-group textarea {
-            width: 100%; padding: 12px; border-radius: 8px; 
-            border: 1px solid var(--border-color); background: var(--bg-dark); color: var(--text-main);
+            width: 100%; padding: 15px; border-radius: 8px; box-sizing: border-box;
+            border: 1px solid var(--border-color); background: var(--bg-dark); color: var(--text-main); font-family: var(--font-main);
         }
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--neon-magenta); box-shadow: 0 0 10px rgba(255,0,255,0.2); }
         .btn-enviar {
-            background: var(--neon-blue); color: #000; border: none; padding: 12px 25px;
-            font-weight: bold; border-radius: 8px; cursor: pointer; width: 100%;
+            background: transparent; color: var(--neon-magenta); border: 2px solid var(--neon-magenta);
+            padding: 12px 30px; font-family: var(--font-display); font-weight: bold; font-size: 16px;
+            border-radius: 8px; cursor: pointer; transition: 0.3s; display: block; margin: 0 auto;
         }
+        .btn-enviar:hover { background: var(--neon-magenta); color: #fff; box-shadow: 0 0 15px var(--neon-magenta); }
 
-        footer { text-align: center; padding: 40px; border-top: 1px solid var(--border-color); }
-        .social-icons { font-size: 1.5rem; margin-bottom: 10px; }
-        .social-icons a { color: var(--text-main); margin: 0 10px; }
+        /* Footer */
+        footer {
+            background-color: var(--header-bg); border-top: 1px solid var(--border-color);
+            padding: 30px 0; text-align: center; font-size: 14px; color: var(--text-muted);
+        }
+        .footer-social { margin-top: 15px; }
+        .social-link {
+            text-decoration: none; color: var(--text-muted); font-size: 20px; margin: 0 10px; transition: 0.3s;
+        }
+        .social-link:hover { color: var(--neon-blue); text-shadow: 0 0 10px var(--neon-blue); }
+
     </style>
 </head>
 <body>
 
-<header>
-    <div class="container" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-        <div class="logo">EDDYKLK BARRIO GAMES</div>
-        <nav>
+    <div id="particle-bg"></div>
+
+    <header>
+        <div class="container logo">
+            <i class="fa-solid fa-traffic-light"></i>
+            <span>EddyKLK Barrio Games</span>
+        </div>
+        <nav class="container">
             <ul>
-                <li><a href="#">Inicio</a></li>
+                <li><a href="#inicio">Inicio</a></li>
                 <li><a href="#apps">Apps</a></li>
                 <li>
-                    <a href="#">Tutoriales <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i></a>
+                    <a href="#" class="tutoriales-link">Tutoriales <i class="fa-solid fa-caret-down"></i></a>
                     <div class="submenu">
-                        <a href="#">Guía .NET MAUI</a>
-                        <a href="#">Publicar en PlayStore</a>
-                        <a href="#">Bases de Datos SQL</a>
+                        <a href="#" class="submenu-item"><i class="fa-brands fa-android"></i> Guías Android</a>
+                        <a href="#" class="submenu-item"><i class="fa-solid fa-gamepad"></i> Game Dev</a>
+                        <a href="#" class="submenu-item"><i class="fa-solid fa-database"></i> SQL & Bases de Datos</a>
                     </div>
                 </li>
                 <li>
-                    <a href="#" style="color: var(--neon-lime);">Entretenimientos <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i></a>
+                    <a href="#" class="entretenimientos-link">Entretenimientos <i class="fa-solid fa-caret-down"></i></a>
                     <div class="submenu">
-                        <a href="https://n9.cl/vezi6y" target="_blank"><i class="fa-brands fa-youtube"></i> YouTube</a>
-                        <a href="#"><i class="fa-brands fa-facebook"></i> Facebook</a>
+                        <a href="https://n9.cl/vezi6y" target="_blank" class="submenu-item" style="color: #ff0000;"><i class="fa-brands fa-youtube"></i> YouTube</a>
+                        <a href="#" class="submenu-item" style="color: #1877f2;"><i class="fa-brands fa-facebook"></i> Facebook</a>
                     </div>
                 </li>
-                <li><a href="#contacto">Contacto</a></li>
+                <li><a href="#contacto-section">Contacto</a></li>
             </ul>
         </nav>
-        <button id="mode-toggle"><i class="fa-solid fa-moon"></i></button>
-    </div>
-</header>
-
-<section class="hero container">
-    <h1>CATÁLOGO 2026</h1>
-    <p>Innovación y juegos desde el corazón del barrio.</p>
-</section>
-
-<div class="container grid" id="apps">
-    <a href="domino_barrio_detalle.html" class="card">
-        <i class="fa-solid fa-dice-five" style="font-size: 40px; color: var(--neon-magenta);"></i>
-        <h3>Domino Barrio</h3>
-        <p>El juego clásico con las reglas de la calle. Haz clic para ver detalles y descargar.</p>
-        <span style="color: var(--neon-blue); font-weight: bold;">Ver más →</span>
-    </a>
-
-    <div class="card">
-        <i class="fa-solid fa-shield-halved" style="font-size: 40px; color: var(--neon-lime);"></i>
-        <h3>BovedadPic</h3>
-        <p>Tus fotos y archivos protegidos con la seguridad del barrio.</p>
-    </div>
-
-    <div class="card">
-        <i class="fa-solid fa-bolt" style="font-size: 40px; color: #ffeb3b;"></i>
-        <h3>MiContadorRD</h3>
-        <p>Controla tu consumo eléctrico y que no te sorprendan.</p>
-    </div>
-</div>
-
-<section id="contacto" class="container">
-    <h2 style="font-family: 'Orbitron'; text-align: center; color: var(--neon-blue);">ENVIAR INQUIETUD</h2>
-    <form action="mailto:barriogamesplus@gmail.com" method="post" enctype="text/plain">
-        <div class="form-group">
-            <label>Tu Correo:</label>
-            <input type="email" name="email" placeholder="ejemplo@correo.com" required>
+        <div class="container header-controls">
+            <button id="theme-toggle"><i class="fa-solid fa-sun"></i> Modo Claro</button>
         </div>
-        <div class="form-group">
-            <label>Tu Inquietud:</label>
-            <textarea name="mensaje" rows="4" placeholder="Escribe aquí tu mensaje para EddyKLK..." required></textarea>
+    </header>
+
+    <section class="hero container" id="inicio">
+        <h1>Apps del Barrio</h1>
+        <p>Las aplicaciones más impactantes y divertidas de EddyKLK. ¡Hechas por y para el barrio!</p>
+    </section>
+
+    <section class="container" id="apps">
+        <div class="catalogo">
+            
+            <a href="domino_detalle.html" class="catalogo-card card-domino">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fa-solid fa-dice-one"></i></div>
+                    <div class="card-title">
+                        <h3>Domino Barrio</h3>
+                        <p>EddyKLK</p>
+                    </div>
+                </div>
+                <div class="card-desc"><p>Juega el clásico dominó con reglas de calle. Haz clic para ir a la página de descarga.</p></div>
+                <div class="card-bottom">
+                    <div class="descubre-text"><p>Descubre lo que <br> incluye este proyecto</p></div>
+                    <span class="ver-detalle">Ver detalle →</span>
+                </div>
+            </a>
+
+            <a href="#" class="catalogo-card card-bovedad">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fa-solid fa-vault"></i></div>
+                    <div class="card-title">
+                        <h3>BovedadPic</h3>
+                        <p>EddyKLK</p>
+                    </div>
+                </div>
+                <div class="card-desc"><p>Bóveda digital segura. Protege y encripta tus fotos y archivos privados.</p></div>
+                <div class="card-bottom">
+                    <div class="descubre-text"><p>Descubre lo que <br> incluye este proyecto</p></div>
+                    <span class="ver-detalle">Ver detalle →</span>
+                </div>
+            </a>
+
+            <a href="#" class="catalogo-card card-micontador">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fa-solid fa-bolt"></i></div>
+                    <div class="card-title">
+                        <h3>MiContadorRD</h3>
+                        <p>EddyKLK</p>
+                    </div>
+                </div>
+                <div class="card-desc"><p>Monitorea tu consumo de energía eléctrica y calcula tus gastos en RD.</p></div>
+                <div class="card-bottom">
+                    <div class="descubre-text"><p>Descubre lo que <br> incluye este proyecto</p></div>
+                    <span class="ver-detalle">Ver detalle →</span>
+                </div>
+            </a>
+
+            <a href="#" class="catalogo-card card-leyendas">
+                <div class="card-top">
+                    <div class="card-icon"><i class="fa-solid fa-ghost"></i></div>
+                    <div class="card-title">
+                        <h3>Leyendas Urbanas RD</h3>
+                        <p>EddyKLK</p>
+                    </div>
+                </div>
+                <div class="card-desc"><p>Colección de relatos oscuros y mitos populares de la República Dominicana.</p></div>
+                <div class="card-bottom">
+                    <div class="descubre-text"><p>Descubre lo que <br> incluye este proyecto</p></div>
+                    <span class="ver-detalle">Ver detalle →</span>
+                </div>
+            </a>
+
+            <a href="#" class="catalogo-card card-transito">
+                <div class="card-top">
+                    <div class="card-icon" style="color: var(--neon-lime);"><i class="fa-solid fa-traffic-light"></i></div>
+                    <div class="card-title">
+                        <h3>Guía Tránsito RD</h3>
+                        <p>EddyKLK</p>
+                    </div>
+                </div>
+                <div class="card-desc"><p>Consulta normas, multas y manuales para manejar seguro en la calle.</p></div>
+                <div class="card-bottom">
+                    <div class="descubre-text"><p>Descubre lo que <br> incluye este proyecto</p></div>
+                    <span class="ver-detalle">Ver detalle →</span>
+                </div>
+            </a>
+
+            <a href="#" class="catalogo-card card-colmado">
+                <div class="card-top">
+                    <div class="card-icon" style="color: var(--neon-magenta);"><i class="fa-solid fa-cart-shopping"></i></div>
+                    <div class="card-title">
+                        <h3>Precios Colmado</h3>
+                        <p>EddyKLK</p>
+                    </div>
+                </div>
+                <div class="card-desc"><p>Compara precios de la canasta básica en tu colmado más cercano.</p></div>
+                <div class="card-bottom">
+                    <div class="descubre-text"><p>Descubre lo que <br> incluye este proyecto</p></div>
+                    <span class="ver-detalle">Ver detalle →</span>
+                </div>
+            </a>
+
+            <a href="#" class="catalogo-card card-futbol">
+                <div class="card-top">
+                    <div class="card-icon" style="color: var(--neon-blue);"><i class="fa-solid fa-futbol"></i></div>
+                    <div class="card-title">
+                        <h3>Fútbol Calle</h3>
+                        <p>EddyKLK</p>
+                    </div>
+                </div>
+                <div class="card-desc"><p>Simulador deportivo callejero. Forma tu equipo y domina la cancha del barrio.</p></div>
+                <div class="card-bottom">
+                    <div class="descubre-text"><p>Descubre lo que <br> incluye este proyecto</p></div>
+                    <span class="ver-detalle">Ver detalle →</span>
+                </div>
+            </a>
+
+            <a href="#" class="catalogo-card card-palabra">
+                <div class="card-top">
+                    <div class="card-icon" style="color: var(--neon-lime);"><i class="fa-solid fa-font"></i></div>
+                    <div class="card-title">
+                        <h3>Adivina la Palabra</h3>
+                        <p>EddyKLK</p>
+                    </div>
+                </div>
+                <div class="card-desc"><p>Pon a prueba tu vocabulario y jerga local en este divertido reto mental.</p></div>
+                <div class="card-bottom">
+                    <div class="descubre-text"><p>Descubre lo que <br> incluye este proyecto</p></div>
+                    <span class="ver-detalle">Ver detalle →</span>
+                </div>
+            </a>
+
         </div>
-        <button type="submit" class="btn-enviar">ENVIAR MENSAJE</button>
-    </form>
-</section>
+    </section>
 
-<footer>
-    <div class="social-icons">
-        <a href="#"><i class="fa-brands fa-github"></i></a>
-        <a href="https://n9.cl/vezi6y" target="_blank"><i class="fa-brands fa-youtube"></i></a>
-    </div>
-    <p>&copy; 2026 EddyKLK Barrio Games. Todos los derechos reservados.</p>
-</footer>
+    <section class="container" id="contacto-section">
+        <h2>¿TIENES ALGUNA INQUIETUD?</h2>
+        <form action="mailto:barriogamesplus@gmail.com" method="post" enctype="text/plain">
+            <div class="form-group">
+                <label for="nombre">Tu Nombre:</label>
+                <input type="text" id="nombre" name="Nombre" placeholder="¿Cómo te llamas?" required>
+            </div>
+            <div class="form-group">
+                <label for="mensaje">Tu Inquietud:</label>
+                <textarea id="mensaje" name="Mensaje" rows="5" placeholder="Escribe aquí de qué trata tu mensaje o propuesta..." required></textarea>
+            </div>
+            <button type="submit" class="btn-enviar">ENVIAR CORREO <i class="fa-solid fa-paper-plane"></i></button>
+        </form>
+    </section>
 
-<script>
-    // Lógica para el Modo Claro / Oscuro
-    const btn = document.getElementById('mode-toggle');
-    const icon = btn.querySelector('i');
+    <footer>
+        <div class="container">
+            <p>© 2026 EddyKLK Barrio Games. Hecho con código y sazón.</p>
+            <div class="footer-social">
+                <a href="#" class="social-link"><i class="fa-brands fa-github"></i></a>
+                <a href="https://n9.cl/vezi6y" target="_blank" class="social-link"><i class="fa-brands fa-youtube"></i></a>
+            </div>
+        </div>
+    </footer>
 
-    btn.addEventListener('click', () => {
-        document.body.classList.toggle('light-mode');
-        
-        if(document.body.classList.contains('light-mode')) {
-            icon.classList.replace('fa-moon', 'fa-sun');
-            localStorage.setItem('theme', 'light');
-        } else {
-            icon.classList.replace('fa-sun', 'fa-moon');
-            localStorage.setItem('theme', 'dark');
+    <script>
+        // Lógica para el Modo Claro / Oscuro
+        const themeBtn = document.getElementById('theme-toggle');
+        const themeIcon = themeBtn.querySelector('i');
+
+        // Función para cambiar el tema
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            
+            if(document.body.classList.contains('light-mode')) {
+                themeIcon.classList.replace('fa-sun', 'fa-moon');
+                themeBtn.innerHTML = '<i class="fa-solid fa-moon"></i> Modo Oscuro';
+                localStorage.setItem('eddyklk-theme', 'light');
+            } else {
+                themeIcon.classList.replace('fa-moon', 'fa-sun');
+                themeBtn.innerHTML = '<i class="fa-solid fa-sun"></i> Modo Claro';
+                localStorage.setItem('eddyklk-theme', 'dark');
+            }
         }
-    });
 
-    // Cargar preferencia guardada
-    if(localStorage.getItem('theme') === 'light') {
-        document.body.classList.add('light-mode');
-        icon.classList.replace('fa-moon', 'fa-sun');
-    }
-</script>
+        themeBtn.addEventListener('click', toggleTheme);
 
+        // Cargar la preferencia guardada al abrir la página
+        if(localStorage.getItem('eddyklk-theme') === 'light') {
+            document.body.classList.add('light-mode');
+            themeBtn.innerHTML = '<i class="fa-solid fa-moon"></i> Modo Oscuro';
+        }
+    </script>
 </body>
 </html>
